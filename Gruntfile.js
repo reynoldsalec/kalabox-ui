@@ -324,14 +324,8 @@ module.exports = function(grunt) {
     'test',
     'less:dist',
     'copy',
-    'shell:build',
-    'nodewebkit',
-    'compress:win32',
-    'compress:win64',
-    'compress:osx32',
-    'compress:osx64',
-    'compress:linux32',
-    'compress:linux64'
+    'shell:build'
+    // @todo: insert electron build steps.
   ]);
 
   grunt.registerTask('bump-patch', [

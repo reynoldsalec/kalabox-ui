@@ -11,12 +11,75 @@ angular.module('kalabox.initialize', [])
   ['$scope', '$location', '_', 'pconfig', 'VirtualBox', 'Boot2Docker',
     function ($scope, $location, _, pconfig, VirtualBox, Boot2Docker) {
 
-      var gui = require('nw.gui');
-      var mb = new gui.Menu({type: 'menubar'});
+      var remote = require('remote');
+      var Menu = remote.require('menu');
+      var template = [
+        {
+          label: 'Kalabox',
+          submenu: [
+            {
+              label: 'About Kalabox',
+              selector: 'orderFrontStandardAboutPanel:'
+            },
+            {
+              type: 'separator'
+            },
+            {
+              label: 'Quit',
+              accelerator: 'Command+Q',
+              selector: 'terminate:'
+            },
+          ]
+        },
+        {
+          label: 'View',
+          submenu: [
+            {
+              label: 'Reload',
+              accelerator: 'Command+R',
+              click: function() { remote.getCurrentWindow().reload(); }
+            },
+            {
+              label: 'Toggle DevTools',
+              accelerator: 'Alt+Command+I',
+              click: function() { remote.getCurrentWindow().toggleDevTools(); }
+            },
+          ]
+        },
+        {
+          label: 'Window',
+          submenu: [
+            {
+              label: 'Minimize',
+              accelerator: 'Command+M',
+              selector: 'performMiniaturize:'
+            },
+            {
+              label: 'Close',
+              accelerator: 'Command+W',
+              selector: 'performClose:'
+            },
+            {
+              type: 'separator'
+            },
+            {
+              label: 'Bring All to Front',
+              selector: 'arrangeInFront:'
+            }
+          ]
+        },
+        {
+          label: 'Help',
+          submenu: []
+        }
+      ];
+
       if (pconfig.platform === 'darwin') {
-        mb.createMacBuiltin('Kalabox', {hideEdit: true, hideWindow: true});
+        // Different mac settings.
       }
-      gui.Window.get().menu = mb;
+
+      var menu = Menu.buildFromTemplate(template);
+      Menu.setApplicationMenu(menu);
 
       // Best practices is to manage our data in a scope object
       $scope.ui = {
